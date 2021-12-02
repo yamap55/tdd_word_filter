@@ -1,20 +1,11 @@
-# python_repository_simple
+# Word Filter
 
-本リポジトリはシンプルな Python 環境のテンプレートリポジトリです
-devcontainer の設定をしていますので、VS Code と Docker、Git さえあれば各種開発用設定が行われた Python の開発環境が構築され、即時開発が可能です
-GitHub のリポジトリページの「Use this template」を押下して使用してください
+本リポジトリは TDD のお題である「Word Filter」の Python 実装になります。
 
-## 内容
+## 参考
 
-- [devcontainer](https://code.visualstudio.com/docs/remote/containers)
-- lint
-  - [flake8](https://flake8.pycqa.org/en/latest/)
-  - [black](https://black.readthedocs.io/en/stable/)
-  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance), [pyright](https://github.com/microsoft/pyright)
-  - [hadolint](https://github.com/hadolint/hadolint)
-- [pytest](https://docs.pytest.org/en/stable/)
-- [GitHub Actions](https://github.co.jp/features/actions)
-- [logging](https://docs.python.org/ja/3/howto/logging.html)
+- https://www.slideshare.net/t_wada/tddbc-exercise
+- https://image.slidesharecdn.com/tddbcexercise-110919222207-phpapp01/95/tddbc-19-728.jpg?cb=1316471500
 
 ## 環境詳細
 
@@ -28,22 +19,9 @@ GitHub のリポジトリページの「Use this template」を押下して使�
   - https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 - 本リポジトリの clone
 - `.env` ファイルを空ファイルでプロジェクト直下に作成
-- 以下をプロジェクト名に合わせて変更
-  - `.devcontainer/devcontainer.json`
-    - `name`, `service`
-  - `docker-compose.yml`
-    - `services` の Key 名
-    - `image`, `container_name`
-    - `env_file`
-      - 環境変数を使用しない場合は除去
-  - main.py
-  - logging.conf
-    - `hoge` を使用するモジュール名に合わせる
-  - `README.md`
-  - `LICENSE`
-  - dependabot
-    - `.github/dependabot.yml`
-    - `.github/workflows/auto_merge_depandabot.yml`
+  - proxy が必要な環境の場合は以下を追加
+    - `http_proxy=http://PROXY_HOST:PROXY_PORT`
+    - `https_proxy=http://PROXY_HOST:PROXY_PORT`
 
 ### 開発手順
 
