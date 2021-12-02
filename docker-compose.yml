@@ -1,6 +1,6 @@
 version: "3"
 services:
-  python_repository_simple:
+  tdd_word_filter:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/project
       - ${USERPROFILE-~}/.ssh:/home/vscode/.ssh
-    image: python_repository_simple-image
-    container_name: python_repository_simple-container
+    image: tdd_word_filter-image
+    container_name: tdd_word_filter-container
     tty: true
     env_file: .env # shellスクリプト内でも環境変数として使用するため

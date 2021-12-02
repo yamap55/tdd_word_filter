@@ -1,4 +1,4 @@
-from hoge.huga import Huga
+from word_filter.huga import Huga
 
 
 class TestHuga:
