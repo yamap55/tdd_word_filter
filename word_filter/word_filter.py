@@ -11,6 +11,6 @@ class WordFilter:
         Parameters
         ----------
         ng_word : str
-            フィルタする単語
+            フィルタする文字列
         """
         pass
