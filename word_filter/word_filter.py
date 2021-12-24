@@ -13,7 +13,7 @@ class WordFilter:
         ng_word : str
             フィルタする文字列
         """
-        pass
+        self.ng_word = ng_word
 
     def detect(self, message: str) -> bool:
         """
@@ -29,4 +29,4 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        return True
+        return self.ng_word in message
