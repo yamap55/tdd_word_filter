@@ -1,3 +1,5 @@
+import pytest
+
 from word_filter.word_filter import WordFilter
 
 
@@ -7,16 +9,14 @@ def test_word_filter():
 
 
 class TestDetect:
-    def test_detect_included(self):
-        filter = WordFilter("ng_word")
-        actual = filter.detect("hoge ng_word huga.")
-
-        expected = True
-        assert actual == expected
-
-    def test_detect_not_included(self):
-        filter = WordFilter("ng_word")
-        actual = filter.detect("message not included")
-
-        expected = False
+    @pytest.mark.parametrize(
+        "ng_word, message, expected",
+        [
+            ("ng_word", "hoge ng_word huga.", True),
+            ("ng_word", "message not included.", False),
+        ],
+    )
+    def test_normal(self, ng_word, message, expected):
+        filter = WordFilter(ng_word)
+        actual = filter.detect(message)
         assert actual == expected
