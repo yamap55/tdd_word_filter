@@ -14,3 +14,19 @@ class WordFilter:
             フィルタする文字列
         """
         pass
+
+    def detect(self, message: str) -> bool:
+        """
+        フィルタする文字列が含まれているかを判定する
+
+        Parameters
+        ----------
+        message : str
+            判定対象のメッセージ
+
+        Returns
+        -------
+        bool
+            含まれているか否か
+        """
+        return True
