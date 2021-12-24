@@ -6,17 +6,17 @@ def test_word_filter():
     assert filter
 
 
-def test_detect_included():
-    filter = WordFilter("ng_word")
-    actual = filter.detect("hoge ng_word huga.")
+class TestDetect:
+    def test_detect_included(self):
+        filter = WordFilter("ng_word")
+        actual = filter.detect("hoge ng_word huga.")
 
-    expected = True
-    assert actual == expected
+        expected = True
+        assert actual == expected
 
+    def test_detect_not_included(self):
+        filter = WordFilter("ng_word")
+        actual = filter.detect("message not included")
 
-def test_detect_not_included():
-    filter = WordFilter("ng_word")
-    actual = filter.detect("message not included")
-
-    expected = False
-    assert actual == expected
+        expected = False
+        assert actual == expected
