@@ -30,3 +30,19 @@ class WordFilter:
             含まれているか否か
         """
         return self.ng_word in message
+
+    def detect_from_sns_text(self, text: str) -> bool:
+        """
+        SNS形式の文字列のメッセージにフィルタする文字列が含まれているかを判定する
+
+        Parameters
+        ----------
+        text : str
+            SNS形式の文字列
+
+        Returns
+        -------
+        bool
+            含まれているか否か
+        """
+        return self.detect(text.split(":")[1])
