@@ -31,7 +31,8 @@ class TestDetectFromSnsText:
             ("ng_word", "ho:ge: ng_word huga.", True),
             ("ng_word", "hoge: huga : ng_word.", True),
             ("ng_word", ":hoge: ng_word huga.", True),
-            ("ng_word", "hoge:          ng_word huga.", True),
+            (" ", "hoge: ng_word", False),
+            (" ", "hoge:  ng_word", True),  # 先頭スペースが1つがテキストに含まれるパターン
         ],
     )
     def test_normal(self, ng_word, text, expected):
