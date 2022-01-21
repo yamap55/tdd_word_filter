@@ -50,5 +50,5 @@ class WordFilter:
         """
         m = self._SNS_MESSAGE_PATTERN.match(text)
         if not m:
-            raise ValueError("SNS形式の文字列ではありません")
+            raise ValueError(f'SNS形式の文字列ではありません text: "{text}"')
         return self.detect(m.group(2))
