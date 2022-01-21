@@ -1,4 +1,5 @@
 """ワードフィルタ"""
+import re
 
 
 class WordFilter:
@@ -31,6 +32,8 @@ class WordFilter:
         """
         return self.ng_word in message
 
+    _SNS_MESSAGE_PATTERN = re.compile(r"^(.+): (.+)")
+
     def detect_from_sns_text(self, text: str) -> bool:
         """
         SNS形式の文字列のメッセージにフィルタする文字列が含まれているかを判定する
@@ -45,4 +48,7 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        return self.detect(text.split(":")[1])
+        m = self._SNS_MESSAGE_PATTERN.match(text)
+        if not m:
+            raise ValueError("SNS形式の文字列ではありません")
+        return self.detect(m.group(2))

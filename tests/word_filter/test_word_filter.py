@@ -28,6 +28,7 @@ class TestDetectFromSnsText:
         [
             ("ng_word", "hoge: ng_word huga.", True),
             ("ng_word", "hoge: text not included.", False),
+            ("ng_word", "ho:ge: ng_word huga.", True),
         ],
     )
     def test_normal(self, ng_word, text, expected):
