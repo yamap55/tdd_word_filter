@@ -5,6 +5,9 @@ import re
 class WordFilter:
     """ワードフィルタ"""
 
+    """SNS形式のメッセージパターン"""
+    _SNS_MESSAGE_PATTERN = re.compile(r"^(.+): (.+)")
+
     def __init__(self, ng_word: str):
         """
         初期化
@@ -31,8 +34,6 @@ class WordFilter:
             含まれているか否か
         """
         return self.ng_word in message
-
-    _SNS_MESSAGE_PATTERN = re.compile(r"^(.+): (.+)")
 
     def detect_from_sns_text(self, text: str) -> bool:
         """
