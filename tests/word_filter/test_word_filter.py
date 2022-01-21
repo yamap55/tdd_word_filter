@@ -29,6 +29,9 @@ class TestDetectFromSnsText:
             ("ng_word", "hoge: ng_word huga.", True),
             ("ng_word", "hoge: text not included.", False),
             ("ng_word", "ho:ge: ng_word huga.", True),
+            ("ng_word", "hoge: huga : ng_word.", True),
+            ("ng_word", ":hoge: ng_word huga.", True),
+            ("ng_word", "hoge:          ng_word huga.", True),
         ],
     )
     def test_normal(self, ng_word, text, expected):
@@ -36,10 +39,17 @@ class TestDetectFromSnsText:
         actual = filter.detect_from_sns_text(text)
         assert actual == expected
 
-    def test_not_match_format(self):
-        filter = WordFilter("ng_word")
+    @pytest.mark.parametrize(
+        "ng_word, text",
+        [
+            ("ng_word", "not matching text"),  # ユーザ名がない
+            ("ng_word", "hoge:ng_word huga."),  # 「:」の直後にスペースがないパターン
+        ],
+    )
+    def test_not_match_format(self, ng_word, text):
+        filter = WordFilter(ng_word)
         with pytest.raises(ValueError) as e:
-            filter.detect_from_sns_text("not matching text")
+            filter.detect_from_sns_text(text)
         actual = str(e.value)
-        expected = 'SNS形式の文字列ではありません text: "not matching text"'
+        expected = f'SNS形式の文字列ではありません text: "{text}"'
         assert actual == expected
