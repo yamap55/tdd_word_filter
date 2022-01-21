@@ -35,3 +35,11 @@ class TestDetectFromSnsText:
         filter = WordFilter(ng_word)
         actual = filter.detect_from_sns_text(text)
         assert actual == expected
+
+    def test_not_match_format(self):
+        filter = WordFilter("ng_word")
+        with pytest.raises(ValueError) as e:
+            filter.detect_from_sns_text("not matching text")
+        actual = str(e.value)
+        expected = 'SNS形式の文字列ではありません text: "not matching text"'
+        assert actual == expected
