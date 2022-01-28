@@ -57,8 +57,14 @@ class TestDetectFromSnsText:
 
 
 class TestCensor:
-    def test_normal(self):
+    def test_not_exist(self):
         filter = WordFilter("ng_word")
         actual = filter.censor("hoge: huga")
         expected = "hoge: huga"
+        assert actual == expected
+
+    def test_exist(self):
+        filter = WordFilter("ng_word")
+        actual = filter.censor("hoge: ng_word")
+        expected = "hoge: <censored>"
         assert actual == expected
