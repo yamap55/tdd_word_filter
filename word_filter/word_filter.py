@@ -53,3 +53,25 @@ class WordFilter:
         if not m:
             raise ValueError(f'SNS形式の文字列ではありません text: "{text}"')
         return self.detect(m.group(2))
+
+    def censor(self, text: str) -> str:
+        """
+        文字列にng_wordが含まれていたら検閲する
+
+        Parameters
+        ----------
+        text : str
+            判定対象の文字列
+
+        Returns
+        -------
+        str
+            検閲済み文字列
+
+        Example
+        -------
+        >>> filter = WordFilter("ng_word")
+        >>> filter.censor("hoge: huga")
+        "hoge: huga"
+        """
+        return text
