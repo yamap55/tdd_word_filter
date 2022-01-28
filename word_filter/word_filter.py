@@ -74,7 +74,6 @@ class WordFilter:
         >>> filter.censor("hoge: huga")
         "hoge: huga"
         """
-        if self.detect(text):
-            return text.replace(self.ng_word, "<censored>")
-        else:
+        if not self.detect(text):
             return text
+        return text.replace(self.ng_word, "<censored>")
