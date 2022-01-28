@@ -54,3 +54,11 @@ class TestDetectFromSnsText:
         actual = str(e.value)
         expected = f'SNS形式の文字列ではありません text: "{text}"'
         assert actual == expected
+
+
+class TestCensor:
+    def test_normal(self):
+        filter = WordFilter("ng_word")
+        actual = filter.censor("hoge: huga")
+        expected = "hoge: huga"
+        assert actual == expected
