@@ -22,29 +22,29 @@ class WordFilter:
         """
         self.ng_word = ng_word
 
-    def detect(self, message: str) -> bool:
+    def detect(self, text: str) -> bool:
         """
         フィルタする文字列が含まれているかを判定する
 
         Parameters
         ----------
-        message : str
-            判定対象のメッセージ
+        text : str
+            判定対象のテキスト
 
         Returns
         -------
         bool
             含まれているか否か
         """
-        return self.ng_word in message
+        return self.ng_word in text
 
-    def detect_from_sns_text(self, text: str) -> bool:
+    def detect_from_sns_message(self, sns_message: str) -> bool:
         """
-        SNS形式の文字列のメッセージにフィルタする文字列が含まれているかを判定する
+        SNS形式の文字列にフィルタする文字列が含まれているかを判定する
 
         Parameters
         ----------
-        text : str
+        sns_message : str
             SNS形式の文字列
 
         Returns
@@ -52,9 +52,9 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        m = self._SNS_MESSAGE_PATTERN.match(text)
+        m = self._SNS_MESSAGE_PATTERN.match(sns_message)
         if not m:
-            raise ValueError(f'SNS形式の文字列ではありません text: "{text}"')
+            raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
         return self.detect(m.group(2))
 
     def censor(self, text: str) -> str:
