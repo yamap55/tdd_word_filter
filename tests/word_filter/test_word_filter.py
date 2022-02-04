@@ -37,7 +37,7 @@ class TestDetectFromSnsText:
     )
     def test_normal(self, ng_word, text, expected):
         filter = WordFilter(ng_word)
-        actual = filter.detect_from_sns_text(text)
+        actual = filter.detect_from_sns_message(text)
         assert actual == expected
 
     @pytest.mark.parametrize(
@@ -50,9 +50,9 @@ class TestDetectFromSnsText:
     def test_not_match_format(self, ng_word, text):
         filter = WordFilter(ng_word)
         with pytest.raises(ValueError) as e:
-            filter.detect_from_sns_text(text)
+            filter.detect_from_sns_message(text)
         actual = str(e.value)
-        expected = f'SNS形式の文字列ではありません text: "{text}"'
+        expected = f'SNS形式の文字列ではありません sns_message: "{text}"'
         assert actual == expected
 
 
