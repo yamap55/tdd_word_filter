@@ -64,14 +64,26 @@ class TestCensor:
         assert actual == expected
 
     class TestExist:
-        def test_in_text(self):
-            filter = WordFilter("ng_word")
-            actual = filter.censor("hoge: ng_word")
-            expected = "hoge: <censored>"
+        @pytest.mark.parametrize(
+            "ng_word, message, expected",
+            [
+                ("ng_word", "hoge: ng_word", "hoge: <censored>"),
+                ("ng_word", "hoge: ng_word ng_word", "hoge: <censored> <censored>"),
+            ],
+        )
+        def test_in_text(self, ng_word, message, expected):
+            filter = WordFilter(ng_word)
+            actual = filter.censor(message)
             assert actual == expected
 
-        def test_in_user(self):
-            filter = WordFilter("ng_word")
-            actual = filter.censor("ng_word: huga")
-            expected = "<censored>: huga"
+        @pytest.mark.parametrize(
+            "ng_word, message, expected",
+            [
+                ("ng_word", "ng_word: huga", "<censored>: huga"),
+                ("ng_word", "ng_word_ng_word: huga", "<censored>_<censored>: huga"),
+            ],
+        )
+        def test_in_user(self, ng_word, message, expected):
+            filter = WordFilter(ng_word)
+            actual = filter.censor(message)
             assert actual == expected
