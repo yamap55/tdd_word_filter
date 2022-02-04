@@ -57,10 +57,19 @@ class TestDetectFromSnsText:
 
 
 class TestCensor:
-    def test_not_exist(self):
-        filter = WordFilter("ng_word")
-        actual = filter.censor("hoge: huga")
-        expected = "hoge: huga"
+    @pytest.mark.parametrize(
+        "ng_word, message, expected",
+        [
+            ("ng_word", "hoge: huga", "hoge: huga"),
+            ("ng_word", "hoge: NG_WORD", "hoge: NG_WORD"),
+            ("ng_word", "NG_WORD: huga", "NG_WORD: huga"),
+            ("NG_WORD", "ng_word: huga", "ng_word: huga"),
+            ("NG_WORD", "hoge: ng_word", "hoge: ng_word"),
+        ],
+    )
+    def test_not_exist(self, ng_word, message, expected):
+        filter = WordFilter(ng_word)
+        actual = filter.censor(message)
         assert actual == expected
 
     class TestExist:
