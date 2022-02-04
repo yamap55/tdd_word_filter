@@ -74,8 +74,8 @@ class WordFilter:
         Example
         -------
         >>> filter = WordFilter("ng_word")
-        >>> filter.censor("hoge: huga")
-        "hoge: huga"
+        >>> filter.censor("hoge: ng_word")
+        "hoge: <censored>"
         """
         if not self.detect(text):
             return text
