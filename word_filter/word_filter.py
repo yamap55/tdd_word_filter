@@ -36,9 +36,7 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        for ng_word in self.ng_words:
-            return ng_word in text
-        return False
+        return any(ng_word in text for ng_word in self.ng_words)
 
     def detect_from_sns_message(self, sns_message: str) -> bool:
         """
