@@ -11,16 +11,16 @@ class WordFilter:
     """検閲された文字列"""
     _CENSORED_TEXT = "<censored>"
 
-    def __init__(self, ng_word: str):
+    def __init__(self, *ng_words: str):
         """
         初期化
 
         Parameters
         ----------
-        ng_word : str
+        ng_words : str
             フィルタする文字列
         """
-        self.ng_word = ng_word
+        self.ng_words = ng_words
 
     def detect(self, text: str) -> bool:
         """
@@ -36,7 +36,9 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        return self.ng_word in text
+        for ng_word in self.ng_words:
+            return ng_word in text
+        return False
 
     def detect_from_sns_message(self, sns_message: str) -> bool:
         """
@@ -79,4 +81,7 @@ class WordFilter:
         """
         if not self.detect(text):
             return text
-        return text.replace(self.ng_word, self._CENSORED_TEXT)
+        result = text
+        for ng_word in self.ng_words:
+            result = result.replace(ng_word, self._CENSORED_TEXT)
+        return result

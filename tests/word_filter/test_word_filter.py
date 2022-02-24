@@ -98,9 +98,9 @@ class TestCensor:
             assert actual == expected
 
 
-class TestDetectMultiWord:
+class TestCensorMultiWord:
     def test_normal(self):
         filter = WordFilter("ng_word1", "ng_word2")
-        actual = filter.detect("ng_word1, ng_word2")
+        actual = filter.censor("ng_word1, ng_word2")
         expected = "<censored>, <censored>"
         assert actual == expected
