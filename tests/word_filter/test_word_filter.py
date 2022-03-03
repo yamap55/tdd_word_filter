@@ -10,33 +10,39 @@ def test_word_filter():
 
 class TestDetect:
     @pytest.mark.parametrize(
-        "ng_word, message, expected",
+        "ng_words, message, expected",
         [
-            ("ng_word", "hoge ng_word huga.", True),
-            ("ng_word", "message not included.", False),
+            (["ng_word"], "hoge ng_word huga.", True),
+            (["ng_word"], "message not included.", False),
+            (["ng_word1", "ng_word2"], "hoge ng_word1 huga.", True),
+            (["ng_word1", "ng_word2"], "hoge ng_word2 huga.", True),
+            (["ng_word1", "ng_word2"], "message not included.", False),
         ],
     )
-    def test_normal(self, ng_word, message, expected):
-        filter = WordFilter(ng_word)
+    def test_normal(self, ng_words, message, expected):
+        filter = WordFilter(*ng_words)
         actual = filter.detect(message)
         assert actual == expected
 
 
 class TestDetectFromSnsText:
     @pytest.mark.parametrize(
-        "ng_word, text, expected",
+        "ng_words, text, expected",
         [
-            ("ng_word", "hoge: ng_word huga.", True),
-            ("ng_word", "hoge: text not included.", False),
-            ("ng_word", "ho:ge: ng_word huga.", True),
-            ("ng_word", "hoge: huga : ng_word.", True),
-            ("ng_word", ":hoge: ng_word huga.", True),
-            (" ", "hoge: ng_word", False),
-            (" ", "hoge:  ng_word", True),  # 先頭スペースが1つがテキストに含まれるパターン
+            (["ng_word"], "hoge: ng_word huga.", True),
+            (["ng_word"], "hoge: text not included.", False),
+            (["ng_word"], "ho:ge: ng_word huga.", True),
+            (["ng_word"], "hoge: huga : ng_word.", True),
+            (["ng_word"], ":hoge: ng_word huga.", True),
+            ([" "], "hoge: ng_word", False),
+            ([" "], "hoge:  ng_word", True),  # 先頭スペースが1つがテキストに含まれるパターン
+            (["ng_word1", "ng_word2"], "hoge: ng_word1 huga.", True),
+            (["ng_word1", "ng_word2"], "hoge: ng_word2 huga.", True),
+            (["ng_word1", "ng_word2"], "hoge: text not included.", False),
         ],
     )
-    def test_normal(self, ng_word, text, expected):
-        filter = WordFilter(ng_word)
+    def test_normal(self, ng_words, text, expected):
+        filter = WordFilter(*ng_words)
         actual = filter.detect_from_sns_message(text)
         assert actual == expected
 
@@ -58,30 +64,38 @@ class TestDetectFromSnsText:
 
 class TestCensor:
     @pytest.mark.parametrize(
-        "ng_word, message, expected",
+        "ng_words, message, expected",
         [
-            ("ng_word", "hoge: huga", "hoge: huga"),
-            ("ng_word", "hoge: NG_WORD", "hoge: NG_WORD"),
-            ("ng_word", "NG_WORD: huga", "NG_WORD: huga"),
-            ("NG_WORD", "ng_word: huga", "ng_word: huga"),
-            ("NG_WORD", "hoge: ng_word", "hoge: ng_word"),
+            (["ng_word"], "hoge: huga", "hoge: huga"),
+            (["ng_word"], "hoge: NG_WORD", "hoge: NG_WORD"),
+            (["ng_word"], "NG_WORD: huga", "NG_WORD: huga"),
+            (["NG_WORD"], "ng_word: huga", "ng_word: huga"),
+            (["NG_WORD"], "hoge: ng_word", "hoge: ng_word"),
+            (["ng_word1", "ng_word2"], "hoge: huga", "hoge: huga"),
         ],
     )
-    def test_not_exist(self, ng_word, message, expected):
-        filter = WordFilter(ng_word)
+    def test_not_exist(self, ng_words, message, expected):
+        filter = WordFilter(*ng_words)
         actual = filter.censor(message)
         assert actual == expected
 
     class TestExist:
         @pytest.mark.parametrize(
-            "ng_word, message, expected",
+            "ng_words, message, expected",
             [
-                ("ng_word", "hoge: ng_word", "hoge: <censored>"),
-                ("ng_word", "hoge: ng_word ng_word", "hoge: <censored> <censored>"),
+                (["ng_word"], "hoge: ng_word", "hoge: <censored>"),
+                (["ng_word"], "hoge: ng_word ng_word", "hoge: <censored> <censored>"),
+                (["ng_word1", "ng_word2"], "hoge: ng_word1", "hoge: <censored>"),
+                (["ng_word1", "ng_word2"], "hoge: ng_word2", "hoge: <censored>"),
+                (
+                    ["ng_word1", "ng_word2"],
+                    "hoge: ng_word1, ng_word2",
+                    "hoge: <censored>, <censored>",
+                ),
             ],
         )
-        def test_in_text(self, ng_word, message, expected):
-            filter = WordFilter(ng_word)
+        def test_in_text(self, ng_words, message, expected):
+            filter = WordFilter(*ng_words)
             actual = filter.censor(message)
             assert actual == expected
 
