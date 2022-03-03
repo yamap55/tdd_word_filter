@@ -110,11 +110,3 @@ class TestCensor:
             filter = WordFilter(ng_word)
             actual = filter.censor(message)
             assert actual == expected
-
-
-class TestCensorMultiWord:
-    def test_normal(self):
-        filter = WordFilter("ng_word1", "ng_word2")
-        actual = filter.censor("ng_word1, ng_word2")
-        expected = "<censored>, <censored>"
-        assert actual == expected
