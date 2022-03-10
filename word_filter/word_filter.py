@@ -8,10 +8,7 @@ class WordFilter:
     """SNS形式のメッセージパターン"""
     _SNS_MESSAGE_PATTERN = re.compile(r"^(.+): (.+)")
 
-    """検閲された文字列"""
-    _CENSORED_TEXT = "<censored>"
-
-    def __init__(self, *ng_words: str):
+    def __init__(self, *ng_words: str, censored_text="<censored>"):
         """
         初期化
 
@@ -19,8 +16,11 @@ class WordFilter:
         ----------
         ng_words : str
             フィルタする文字列
+        censored_text : str, optional
+            検閲された文字列, by default "<censored>"
         """
         self.ng_words = ng_words
+        self.censored_text = censored_text
 
     def detect(self, text: str) -> bool:
         """
@@ -81,5 +81,5 @@ class WordFilter:
             return text
         result = text
         for ng_word in self.ng_words:
-            result = result.replace(ng_word, self._CENSORED_TEXT)
+            result = result.replace(ng_word, self.censored_text)
         return result

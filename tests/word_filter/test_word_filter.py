@@ -110,3 +110,9 @@ class TestCensor:
             filter = WordFilter(ng_word)
             actual = filter.censor(message)
             assert actual == expected
+
+        def test_set_censored_text(self):
+            filter = WordFilter("ng_word", censored_text="<set_cencored_text>")
+            actual = filter.censor("hoge ng_word huga.")
+            expected = "hoge <set_cencored_text> huga."
+            assert actual == expected
