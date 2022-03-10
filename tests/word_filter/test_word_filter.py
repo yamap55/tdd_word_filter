@@ -1,5 +1,3 @@
-from cmath import exp
-
 import pytest
 
 from word_filter.word_filter import WordFilter
