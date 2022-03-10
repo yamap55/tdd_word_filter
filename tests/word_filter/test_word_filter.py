@@ -1,3 +1,5 @@
+from cmath import exp
+
 import pytest
 
 from word_filter.word_filter import WordFilter
@@ -109,4 +111,10 @@ class TestCensor:
         def test_in_user(self, ng_word, message, expected):
             filter = WordFilter(ng_word)
             actual = filter.censor(message)
+            assert actual == expected
+
+        def test_set_censored_text(self):
+            filter = WordFilter("ng_word", censored_text="<set_cencored_text>")
+            actual = filter.censor("ng_word")
+            expected = "<set_cencored_text>"
             assert actual == expected
