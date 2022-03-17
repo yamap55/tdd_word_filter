@@ -25,7 +25,7 @@ class TestDetect:
         assert actual == expected
 
 
-class TestDetectFromSnsText:
+class TestDetectFromSnsMessage:
     @pytest.mark.parametrize(
         "ng_words, text, expected",
         [
