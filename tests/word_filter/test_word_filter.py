@@ -116,3 +116,11 @@ class TestCensor:
             actual = filter.censor("hoge ng_word huga.")
             expected = "hoge <set_cencored_text> huga."
             assert actual == expected
+
+
+class TestCensorFromSnsMessage:
+    def test_normal(self):
+        filter = WordFilter("ng_word")
+        actual = filter.censor_from_sns_message("ng_word: ng_word huga.")
+        expected = "ng_word: <censored> huga."
+        assert actual == expected
