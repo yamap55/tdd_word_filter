@@ -64,7 +64,7 @@ class WordFilter:
         Parameters
         ----------
         text : str
-            判定対象の文字列
+            検閲対象の文字列
 
         Returns
         -------
@@ -74,8 +74,8 @@ class WordFilter:
         Example
         -------
         >>> filter = WordFilter("ng_word")
-        >>> filter.censor("hoge: ng_word")
-        "hoge: <censored>"
+        >>> filter.censor("hoge ng_word")
+        "hoge <censored>"
         """
         if not self.detect(text):
             return text
