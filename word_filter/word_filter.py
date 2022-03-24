@@ -109,3 +109,20 @@ class WordFilter:
             censored_text = self.censor(sns_message)
             return f"{m.group(1)}: {censored_text}"
         return self.censor(sns_message)
+
+    def _extract_message(self, sns_message: str) -> str:
+        """
+        SNS形式のメッセージからメッセージを抽出する
+
+        Parameters
+        ----------
+        sns_message : str
+            SNS形式のメッセージ
+
+        Returns
+        -------
+        str
+            抽出したメッセージ
+        """
+        m = self._SNS_MESSAGE_PATTERN.match(sns_message)
+        return m.group(2) if m else ""
