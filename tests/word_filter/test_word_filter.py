@@ -124,3 +124,11 @@ class TestCensorFromSnsMessage:
         actual = filter.censor_from_sns_message("ng_word: ng_word huga.")
         expected = "ng_word: <censored> huga."
         assert actual == expected
+
+    def test_not_sns_message(self):
+        filter = WordFilter("ng_word")
+        with pytest.raises(ValueError) as e:
+            filter.censor_from_sns_message("ng_word huga.")
+        actual = str(e.value)
+        expected = 'SNS形式の文字列ではありません sns_message: "ng_word huga."'
+        assert actual == expected
