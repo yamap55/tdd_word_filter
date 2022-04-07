@@ -52,9 +52,7 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        m = self._SNS_MESSAGE_PATTERN.match(sns_message)
-        if not m:
-            raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
+        m = self._match_sns_message(sns_message)
         return self.detect(m.group(2))
 
     def censor(self, text: str) -> str:
