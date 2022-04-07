@@ -104,15 +104,14 @@ class WordFilter:
         >>> filter.censor("ng_word: ng_word")
         "ng_word: <censored>"
         """
-        if m := self._SNS_MESSAGE_PATTERN.match(sns_message):
-            sns_message = m.group(2)
-            censored_text = self.censor(sns_message)
-            return f"{m.group(1)}: {censored_text}"
-        return self.censor(sns_message)
+        m = self._match_sns_message(sns_message)
+        sns_message = m.group(2)
+        censored_text = self.censor(sns_message)
+        return f"{m.group(1)}: {censored_text}"
 
-    def _extract_message(self, sns_message: str) -> str:
+    def _match_sns_message(self, sns_message: str) -> re.Match:
         """
-        SNS形式のメッセージからメッセージを抽出する
+        SNS形式のメッセージに正規表現を適用する
 
         Parameters
         ----------
@@ -127,4 +126,4 @@ class WordFilter:
         m = self._SNS_MESSAGE_PATTERN.match(sns_message)
         if not m:
             raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
-        return m.group(2)
+        return m

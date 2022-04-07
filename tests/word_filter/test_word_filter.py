@@ -132,26 +132,3 @@ class TestCensorFromSnsMessage:
         actual = str(e.value)
         expected = 'SNS形式の文字列ではありません sns_message: "ng_word huga."'
         assert actual == expected
-
-
-class TestExtractMessage:
-    @pytest.mark.parametrize(
-        "sns_message, expected",
-        [
-            ("hoge: message", "message"),
-            ("hoge: message1 message2", "message1 message2"),
-            ("hoge:  message ", " message "),
-        ],
-    )
-    def test_sns_fomrat(self, sns_message, expected):
-        filter = WordFilter("ng_word")
-        actual = filter._extract_message(sns_message)
-        assert actual == expected
-
-    def test_not_sns_fomrat(self):
-        filter = WordFilter("ng_word")
-        with pytest.raises(ValueError) as e:
-            filter._extract_message("hoge message")
-        actual = str(e.value)
-        expected = 'SNS形式の文字列ではありません sns_message: "hoge message"'
-        assert actual == expected
