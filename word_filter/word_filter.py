@@ -125,4 +125,6 @@ class WordFilter:
             抽出したメッセージ
         """
         m = self._SNS_MESSAGE_PATTERN.match(sns_message)
-        return m.group(2) if m else ""
+        if not m:
+            raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
+        return m.group(2)
