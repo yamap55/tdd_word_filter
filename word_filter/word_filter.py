@@ -118,8 +118,8 @@ class WordFilter:
 
         Returns
         -------
-        str
-            抽出したメッセージ
+        re.Match
+            正規表現を適用した結果
         """
         m = self._SNS_MESSAGE_PATTERN.match(sns_message)
         if not m:
