@@ -52,9 +52,7 @@ class WordFilter:
         bool
             含まれているか否か
         """
-        m = self._SNS_MESSAGE_PATTERN.match(sns_message)
-        if not m:
-            raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
+        m = self._match_sns_message(sns_message)
         return self.detect(m.group(2))
 
     def censor(self, text: str) -> str:
@@ -83,3 +81,47 @@ class WordFilter:
         for ng_word in self.ng_words:
             result = result.replace(ng_word, self.censored_text)
         return result
+
+    def censor_from_sns_message(self, sns_message: str) -> str:
+        """
+        SNS形式の文字列にng_wordが含まれていたら検閲する
+
+        Parameters
+        ----------
+        sns_message : str
+            検閲対象のSNS形式のメッセージ
+
+        Returns
+        -------
+        str
+            検閲済みメッセージ
+
+        Example
+        -------
+        >>> filter = WordFilter("ng_word")
+        >>> filter.censor("ng_word: ng_word")
+        "ng_word: <censored>"
+        """
+        m = self._match_sns_message(sns_message)
+        sns_message = m.group(2)
+        censored_text = self.censor(sns_message)
+        return f"{m.group(1)}: {censored_text}"
+
+    def _match_sns_message(self, sns_message: str) -> re.Match:
+        """
+        SNS形式のメッセージに正規表現を適用する
+
+        Parameters
+        ----------
+        sns_message : str
+            SNS形式のメッセージ
+
+        Returns
+        -------
+        re.Match
+            正規表現を適用した結果
+        """
+        m = self._SNS_MESSAGE_PATTERN.match(sns_message)
+        if not m:
+            raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
+        return m
