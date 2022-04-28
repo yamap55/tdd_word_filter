@@ -132,3 +132,10 @@ class TestCensorFromSnsMessage:
         actual = str(e.value)
         expected = 'SNS形式の文字列ではありません sns_message: "ng_word huga."'
         assert actual == expected
+
+class TestCensorFromTextFile:
+    def test_output_path(self):
+        filter = WordFilter("ng_word")
+        actual = filter.censor_from_text_file("a.txt")
+        expected = "a_censored.txt"
+        assert actual == expected
