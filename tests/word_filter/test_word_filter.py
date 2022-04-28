@@ -137,6 +137,8 @@ class TestCensorFromSnsMessage:
 class TestCensorFromTextFile:
     def test_output_path(self):
         filter = WordFilter("ng_word")
+        with open("a.txt", "w") as f:
+            f.write("ng_word: ng_word huga.")
         actual = filter.censor_from_text_file("a.txt")
         expected = "a_censored.txt"
         assert actual == expected
@@ -144,9 +146,9 @@ class TestCensorFromTextFile:
     def test_output_text(self):
         filter = WordFilter("ng_word")
 
-        with open("a.txt", "w") as f:
+        with open("b.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        output_path = filter.censor_from_text_file("a.txt")
+        output_path = filter.censor_from_text_file("b.txt")
         with open(output_path, "r") as f:
             actual = f.read()
         expected = "ng_word: <censored> huga."

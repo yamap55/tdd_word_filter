@@ -146,5 +146,10 @@ class WordFilter:
         >>> filter.censor_from_text_file("input.txt")
         "input_censored.txt"
         """
+        with open(input_file_path, "r") as f:
+            text = f.read()
+        censored_text = self.censor_from_sns_message(text)
         output_file_path = input_file_path.replace(".txt", "_censored.txt")
+        with open(output_file_path, "w") as f:
+            f.write(censored_text)
         return output_file_path
