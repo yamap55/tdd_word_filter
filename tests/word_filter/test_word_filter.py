@@ -135,20 +135,26 @@ class TestCensorFromSnsMessage:
 
 
 class TestCensorFromTextFile:
+    # TODO: ファイルを消す
+    # TODO: pytestのtempファイルを使用してファイルを作る
+    # TODO: 複数行のテキストが含まれるファイルのテストを追加
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.filter = WordFilter("ng_word")
+
+
     def test_output_path(self):
-        filter = WordFilter("ng_word")
         with open("a.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        actual = filter.censor_from_text_file("a.txt")
+        actual = self.filter.censor_from_text_file("a.txt")
         expected = "a_censored.txt"
         assert actual == expected
 
     def test_output_text(self):
-        filter = WordFilter("ng_word")
-
         with open("b.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        output_path = filter.censor_from_text_file("b.txt")
+        output_path = self.filter.censor_from_text_file("b.txt")
         with open(output_path, "r") as f:
             actual = f.read()
         expected = "ng_word: <censored> huga."
