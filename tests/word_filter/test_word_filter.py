@@ -143,7 +143,6 @@ class TestCensorFromTextFile:
     def setup(self):
         self.filter = WordFilter("ng_word")
 
-
     def test_output_path(self):
         with open("a.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
