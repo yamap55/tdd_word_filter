@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from word_filter.word_filter import WordFilter
@@ -149,6 +151,8 @@ class TestCensorFromTextFile:
         actual = self.filter.censor_from_text_file("a.txt")
         expected = "a_censored.txt"
         assert actual == expected
+        os.remove("a.txt")
+        os.remove("a_censored.txt")
 
     def test_output_text(self):
         with open("b.txt", "w") as f:
@@ -158,3 +162,5 @@ class TestCensorFromTextFile:
             actual = f.read()
         expected = "ng_word: <censored> huga."
         assert actual == expected
+        os.remove("b.txt")
+        os.remove("b_censored.txt")
