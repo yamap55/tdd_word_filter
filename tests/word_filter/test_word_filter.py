@@ -137,7 +137,6 @@ class TestCensorFromSnsMessage:
 
 
 class TestCensorFromTextFile:
-    # TODO: ファイルを消す
     # TODO: pytestのtempファイルを使用してファイルを作る
     # TODO: 複数行のテキストが含まれるファイルのテストを追加
 
