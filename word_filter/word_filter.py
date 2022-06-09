@@ -1,5 +1,6 @@
 """ワードフィルタ"""
 import re
+from pathlib import Path
 
 
 class WordFilter:
@@ -146,10 +147,15 @@ class WordFilter:
         >>> filter.censor_from_text_file("input.txt")
         "input_censored.txt"
         """
-        with open(input_file_path, "r") as f:
+        casted_input_file = Path(input_file_path)
+        with open(casted_input_file, "r") as f:
             text = f.read()
         censored_text = self.censor_from_sns_message(text)
-        output_file_path = input_file_path.replace(".txt", "_censored.txt")
+
+        output_file_path = casted_input_file.parent / (
+            casted_input_file.stem + "_censored" + casted_input_file.suffix
+        )
+
         with open(output_file_path, "w") as f:
             f.write(censored_text)
-        return output_file_path
+        return str(output_file_path)
