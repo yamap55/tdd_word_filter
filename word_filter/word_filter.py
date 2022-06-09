@@ -127,34 +127,33 @@ class WordFilter:
             raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
         return m
 
-    def censor_from_text_file(self, input_file_path: str) -> str:
+    def censor_from_text_file(self, input_file_path: Path) -> Path:
         """
         テキストファイルにng_wordが含まれていたら検閲する
 
         Parameters
         ----------
-        input_file_path : str
+        input_file_path : Path
             検閲対象のテキストファイルのパス
 
         Returns
         -------
-        str
+        Path
             検閲済みテキストファイルのパス
 
         Example
         -------
         >>> filter = WordFilter("ng_word")
         >>> filter.censor_from_text_file("input.txt")
-        "input_censored.txt"
+        PosixPath("input_censored.txt")
         """
-        casted_input_file = Path(input_file_path)
-        with open(casted_input_file, "r") as f:
+        with open(input_file_path, "r") as f:
             text = f.read()
         censored_text = self.censor_from_sns_message(text)
 
-        replaced_file_name = f"{casted_input_file.stem}_censored{casted_input_file.suffix}"
-        output_file_path = casted_input_file.parent / replaced_file_name
+        replaced_file_name = f"{input_file_path.stem}_censored{input_file_path.suffix}"
+        output_file_path = input_file_path.parent / replaced_file_name
 
         with open(output_file_path, "w") as f:
             f.write(censored_text)
-        return str(output_file_path)
+        return output_file_path

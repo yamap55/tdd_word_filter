@@ -144,14 +144,14 @@ class TestCensorFromTextFile:
     def test_output_path(self, tmp_path):
         with open(tmp_path / "a.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        actual = self.filter.censor_from_text_file(str(tmp_path / "a.txt"))
-        expected = str(tmp_path / "a_censored.txt")
+        actual = self.filter.censor_from_text_file(tmp_path / "a.txt")
+        expected = tmp_path / "a_censored.txt"
         assert actual == expected
 
     def test_output_text(self, tmp_path):
         with open(tmp_path / "b.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        output_path = self.filter.censor_from_text_file(str(tmp_path / "b.txt"))
+        output_path = self.filter.censor_from_text_file(tmp_path / "b.txt")
         with open(output_path, "r") as f:
             actual = f.read()
         expected = "ng_word: <censored> huga."
@@ -160,6 +160,6 @@ class TestCensorFromTextFile:
     def test_contains_suffix(self, tmp_path):
         with open(tmp_path / "a.txt_b.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        actual = self.filter.censor_from_text_file(str(tmp_path / "a.txt_b.txt"))
-        expected = str(tmp_path / "a.txt_b_censored.txt")
+        actual = self.filter.censor_from_text_file(tmp_path / "a.txt_b.txt")
+        expected = tmp_path / "a.txt_b_censored.txt"
         assert actual == expected
