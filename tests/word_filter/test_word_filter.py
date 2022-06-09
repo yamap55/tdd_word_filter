@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from word_filter.word_filter import WordFilter
@@ -137,8 +135,6 @@ class TestCensorFromSnsMessage:
 
 
 class TestCensorFromTextFile:
-    # TODO: test_output_textをtmpdirを使う形式に書き換える
-    # TODO: pytestのtempファイルを使用してファイルを作る
     # TODO: 複数行のテキストが含まれるファイルのテストを追加
 
     @pytest.fixture(autouse=True)
@@ -152,13 +148,11 @@ class TestCensorFromTextFile:
         expected = str(tmp_path / "a_censored.txt")
         assert actual == expected
 
-    def test_output_text(self):
-        with open("b.txt", "w") as f:
+    def test_output_text(self, tmp_path):
+        with open(tmp_path / "b.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        output_path = self.filter.censor_from_text_file("b.txt")
+        output_path = self.filter.censor_from_text_file(str(tmp_path / "b.txt"))
         with open(output_path, "r") as f:
             actual = f.read()
         expected = "ng_word: <censored> huga."
         assert actual == expected
-        os.remove("b.txt")
-        os.remove("b_censored.txt")
