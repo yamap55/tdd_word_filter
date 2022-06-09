@@ -152,9 +152,8 @@ class WordFilter:
             text = f.read()
         censored_text = self.censor_from_sns_message(text)
 
-        output_file_path = casted_input_file.parent / (
-            casted_input_file.stem + "_censored" + casted_input_file.suffix
-        )
+        replaced_file_name = f"{casted_input_file.stem}_censored{casted_input_file.suffix}"
+        output_file_path = casted_input_file.parent / replaced_file_name
 
         with open(output_file_path, "w") as f:
             f.write(censored_text)
