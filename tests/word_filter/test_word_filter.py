@@ -145,11 +145,11 @@ class TestCensorFromTextFile:
     def setup(self):
         self.filter = WordFilter("ng_word")
 
-    def test_output_path(self, tmpdir):
-        with open(tmpdir / "a.txt", "w") as f:
+    def test_output_path(self, tmp_path):
+        with open(tmp_path / "a.txt", "w") as f:
             f.write("ng_word: ng_word huga.")
-        actual = self.filter.censor_from_text_file(str(tmpdir / "a.txt"))
-        expected = tmpdir / "a_censored.txt"
+        actual = self.filter.censor_from_text_file(str(tmp_path / "a.txt"))
+        expected = str(tmp_path / "a_censored.txt")
         assert actual == expected
 
     def test_output_text(self):
