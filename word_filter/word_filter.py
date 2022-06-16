@@ -147,13 +147,11 @@ class WordFilter:
         >>> filter.censor_from_text_file("input.txt")
         PosixPath("input_censored.txt")
         """
-        with open(input_file_path, "r") as f:
-            text = f.read()
-        censored_text = self.censor_from_sns_message(text)
-
         replaced_file_name = f"{input_file_path.stem}_censored{input_file_path.suffix}"
         output_file_path = input_file_path.parent / replaced_file_name
+        with (open(input_file_path, "r") as input, open(output_file_path, "a") as output):
+            for text in input:
+                censored_text = self.censor_from_sns_message(text)
+                print(censored_text, file=output)
 
-        with open(output_file_path, "w") as f:
-            f.write(censored_text)
         return output_file_path

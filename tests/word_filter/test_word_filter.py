@@ -135,8 +135,7 @@ class TestCensorFromSnsMessage:
 
 
 class TestCensorFromTextFile:
-    # TODO: 複数行のテキストが含まれるファイルのテストを追加
-
+    # TODO: 末尾に改行がないときに改行が付与されるテストを追加。
     @pytest.fixture(autouse=True)
     def setup(self):
         self.filter = WordFilter("ng_word")
@@ -153,12 +152,12 @@ class TestCensorFromTextFile:
     def test_output_text(self, tmp_path):
         input_file_path = tmp_path / "a.txt"
         with open(input_file_path, "w") as f:
-            f.write("ng_word: ng_word huga.")
+            f.write("ng_word: ng_word huga.\n")
 
         output_path = self.filter.censor_from_text_file(input_file_path)
         with open(output_path, "r") as f:
             actual = f.read()
-        expected = "ng_word: <censored> huga."
+        expected = "ng_word: <censored> huga.\n"
         assert actual == expected
 
     def test_contains_suffix(self, tmp_path):
@@ -179,5 +178,5 @@ class TestCensorFromTextFile:
         output_path = self.filter.censor_from_text_file(input_file_path)
         with open(output_path, "r") as f:
             actual = f.read()
-        expected = "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."])
+        expected = "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."]) + "\n"
         assert actual == expected
