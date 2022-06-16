@@ -169,3 +169,15 @@ class TestCensorFromTextFile:
         actual = self.filter.censor_from_text_file(input_file_path)
         expected = tmp_path / "a.txt_b_censored.txt"
         assert actual == expected
+
+    def test_output_multiple_text(self, tmp_path):
+        input_file_path = tmp_path / "a.txt"
+        multiple_text = "\n".join(["ng_word: ng_word huga.", "ng_word2: ng_word huga."])
+        with open(input_file_path, "w") as f:
+            f.write(multiple_text)
+
+        output_path = self.filter.censor_from_text_file(input_file_path)
+        with open(output_path, "r") as f:
+            actual = f.read()
+        expected = "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."])
+        assert actual == expected
