@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from word_filter.word_filter import WordFilter
@@ -132,3 +134,53 @@ class TestCensorFromSnsMessage:
         actual = str(e.value)
         expected = 'SNS形式の文字列ではありません sns_message: "ng_word huga."'
         assert actual == expected
+
+
+class TestCensorFromTextFile:
+    @pytest.fixture
+    def word_filter(self):
+        return WordFilter("ng_word")
+
+    class TestOutputFileName:
+        @pytest.mark.parametrize(
+            "input_file_name, output_file_name",
+            [
+                ("a.txt", "a_censored.txt"),
+                ("a.txt_b.txt", "a.txt_b_censored.txt"),
+            ],
+        )
+        def test_normal(self, word_filter, tmp_path, input_file_name, output_file_name):
+            input_file_path = tmp_path / input_file_name
+            with open(input_file_path, "w") as f:
+                f.write("user_name: message")
+
+            actual = word_filter.censor_from_text_file(input_file_path)
+            expected = tmp_path / output_file_name
+            assert actual == expected
+
+    class TestOutputText:
+        @pytest.mark.parametrize(
+            "input_text, expected",
+            [
+                ("ng_word: ng_word huga.\n", "ng_word: <censored> huga.\n"),
+                (
+                    "\n".join(["ng_word: ng_word huga.", "ng_word2: ng_word huga."]),
+                    "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."]) + "\n",
+                ),
+                # 末尾が改行コードがない場合でも出力には改行コードが付与される
+                ("ng_word: ng_word huga.", "ng_word: <censored> huga.\n"),
+            ],
+        )
+        def test_normal(self, word_filter, tmp_path, input_text, expected):
+            input_file_path = tmp_path / "a.txt"
+            with open(input_file_path, "w") as f:
+                f.write(input_text)
+
+            output_path = word_filter.censor_from_text_file(input_file_path)
+            with open(output_path, "r") as f:
+                actual = f.read()
+            assert actual == expected
+
+    def test_not_exists_input_file(self, word_filter):
+        with pytest.raises(FileNotFoundError):
+            word_filter.censor_from_text_file(Path("a.txt"))

@@ -1,5 +1,6 @@
 """ワードフィルタ"""
 import re
+from pathlib import Path
 
 
 class WordFilter:
@@ -125,3 +126,32 @@ class WordFilter:
         if not m:
             raise ValueError(f'SNS形式の文字列ではありません sns_message: "{sns_message}"')
         return m
+
+    def censor_from_text_file(self, input_file_path: Path) -> Path:
+        """
+        テキストファイルにng_wordが含まれていたら検閲する
+
+        Parameters
+        ----------
+        input_file_path : Path
+            検閲対象のテキストファイルのパス
+
+        Returns
+        -------
+        Path
+            検閲済みテキストファイルのパス
+
+        Example
+        -------
+        >>> filter = WordFilter("ng_word")
+        >>> filter.censor_from_text_file("input.txt")
+        PosixPath("input_censored.txt")
+        """
+        replaced_file_name = f"{input_file_path.stem}_censored{input_file_path.suffix}"
+        output_file_path = input_file_path.parent / replaced_file_name
+        with (open(input_file_path, "r") as input, open(output_file_path, "a") as output):
+            for text in input:
+                censored_text = self.censor_from_sns_message(text)
+                print(censored_text, file=output)
+
+        return output_file_path
