@@ -136,59 +136,60 @@ class TestCensorFromSnsMessage:
 
 class TestCensorFromTextFile:
     # TODO: 末尾に改行がないときに改行が付与されるテストを追加。
-    @pytest.fixture(autouse=True)
-    def setup(self):
-        self.filter = WordFilter("ng_word")
 
-    def test_output_path(self, tmp_path):
-        input_file_path = tmp_path / "a.txt"
-        with open(input_file_path, "w") as f:
-            f.write("ng_word: ng_word huga.")
+    @pytest.fixture
+    def word_filter(self):
+        return WordFilter("ng_word")
 
-        actual = self.filter.censor_from_text_file(input_file_path)
-        expected = tmp_path / "a_censored.txt"
-        assert actual == expected
+    class TestOutputFileName:
+        @pytest.mark.parametrize(
+            "input_file_name, output_file_name",
+            [
+                ("a.txt", "a_censored.txt"),
+                ("a.txt_b.txt", "a.txt_b_censored.txt"),
+            ],
+        )
+        def test_normal(self, word_filter, tmp_path, input_file_name, output_file_name):
+            input_file_path = tmp_path / input_file_name
+            with open(input_file_path, "w") as f:
+                f.write("user_name: message")
 
-    def test_output_text(self, tmp_path):
-        input_file_path = tmp_path / "a.txt"
-        with open(input_file_path, "w") as f:
-            f.write("ng_word: ng_word huga.\n")
+            actual = word_filter.censor_from_text_file(input_file_path)
+            expected = tmp_path / output_file_name
+            assert actual == expected
 
-        output_path = self.filter.censor_from_text_file(input_file_path)
-        with open(output_path, "r") as f:
-            actual = f.read()
-        expected = "ng_word: <censored> huga.\n"
-        assert actual == expected
+    class TestOutputText:
+        def test_output_text(self, word_filter: WordFilter, tmp_path):
+            input_file_path = tmp_path / "a.txt"
+            with open(input_file_path, "w") as f:
+                f.write("ng_word: ng_word huga.\n")
 
-    def test_output_text_end_newline(self, tmp_path):
-        # 末尾が改行コードがない場合でも出力には改行コードが付与される
-        input_file_path = tmp_path / "a.txt"
-        with open(input_file_path, "w") as f:
-            f.write("ng_word: ng_word huga.")
+            output_path = word_filter.censor_from_text_file(input_file_path)
+            with open(output_path, "r") as f:
+                actual = f.read()
+            expected = "ng_word: <censored> huga.\n"
+            assert actual == expected
 
-        output_path = self.filter.censor_from_text_file(input_file_path)
-        with open(output_path, "r") as f:
-            actual = f.read()
-        expected = "ng_word: <censored> huga.\n"
-        assert actual == expected
+        def test_output_text_end_newline(self, word_filter: WordFilter, tmp_path):
+            # 末尾が改行コードがない場合でも出力には改行コードが付与される
+            input_file_path = tmp_path / "a.txt"
+            with open(input_file_path, "w") as f:
+                f.write("ng_word: ng_word huga.")
 
-    def test_contains_suffix(self, tmp_path):
-        input_file_path = tmp_path / "a.txt_b.txt"
-        with open(input_file_path, "w") as f:
-            f.write("ng_word: ng_word huga.")
+            output_path = word_filter.censor_from_text_file(input_file_path)
+            with open(output_path, "r") as f:
+                actual = f.read()
+            expected = "ng_word: <censored> huga.\n"
+            assert actual == expected
 
-        actual = self.filter.censor_from_text_file(input_file_path)
-        expected = tmp_path / "a.txt_b_censored.txt"
-        assert actual == expected
+        def test_output_multiple_text(self, word_filter: WordFilter, tmp_path):
+            input_file_path = tmp_path / "a.txt"
+            multiple_text = "\n".join(["ng_word: ng_word huga.", "ng_word2: ng_word huga."])
+            with open(input_file_path, "w") as f:
+                f.write(multiple_text)
 
-    def test_output_multiple_text(self, tmp_path):
-        input_file_path = tmp_path / "a.txt"
-        multiple_text = "\n".join(["ng_word: ng_word huga.", "ng_word2: ng_word huga."])
-        with open(input_file_path, "w") as f:
-            f.write(multiple_text)
-
-        output_path = self.filter.censor_from_text_file(input_file_path)
-        with open(output_path, "r") as f:
-            actual = f.read()
-        expected = "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."]) + "\n"
-        assert actual == expected
+            output_path = word_filter.censor_from_text_file(input_file_path)
+            with open(output_path, "r") as f:
+                actual = f.read()
+            expected = "\n".join(["ng_word: <censored> huga.", "ng_word2: <censored> huga."]) + "\n"
+            assert actual == expected
