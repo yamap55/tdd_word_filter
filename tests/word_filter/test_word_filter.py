@@ -135,8 +135,6 @@ class TestCensorFromSnsMessage:
 
 
 class TestCensorFromTextFile:
-    # TODO: 末尾に改行がないときに改行が付与されるテストを追加。
-
     @pytest.fixture
     def word_filter(self):
         return WordFilter("ng_word")
