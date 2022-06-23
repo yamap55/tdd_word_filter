@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from word_filter.word_filter import WordFilter
@@ -178,3 +180,7 @@ class TestCensorFromTextFile:
             with open(output_path, "r") as f:
                 actual = f.read()
             assert actual == expected
+
+    def test_not_exists_input_file(self, word_filter):
+        with pytest.raises(FileNotFoundError):
+            word_filter.censor_from_text_file(Path("a.txt"))
