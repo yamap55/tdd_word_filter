@@ -184,3 +184,14 @@ class TestCensorFromTextFile:
     def test_not_exists_input_file(self, word_filter):
         with pytest.raises(FileNotFoundError):
             word_filter.censor_from_text_file(Path("a.txt"))
+
+
+class TestLog:
+    @pytest.fixture
+    def word_filter(self):
+        return WordFilter("ng_word")
+
+    def test_main(self, word_filter):
+        actual = word_filter.get_log()
+        expected = []
+        assert actual == expected
