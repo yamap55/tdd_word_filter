@@ -192,6 +192,6 @@ class TestCensorLog:
         return WordFilter("ng_word")
 
     def test_main(self, word_filter):
-        actual = word_filter.get_censor_log()
+        actual = word_filter.censor_log
         expected = []
         assert actual == expected
