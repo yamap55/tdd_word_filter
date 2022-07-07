@@ -199,5 +199,13 @@ class TestCensorLog:
     def test_censor(self, word_filter):
         word_filter.censor("ng_word")
         actual = word_filter.censor_log
-        expected = [("", "ng_word")]
+        expected = [
+            {
+                "user_name": "",
+                "text": "ng_word",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            }
+        ]
         assert actual == expected
