@@ -77,6 +77,28 @@ class WordFilter:
         >>> filter.censor("hoge ng_word")
         "hoge <censored>"
         """
+        return self._censor(text)
+
+    def _censor(self, text: str) -> str:
+        """
+        文字列にng_wordが含まれていたら検閲する
+
+        Parameters
+        ----------
+        text : str
+            検閲対象の文字列
+
+        Returns
+        -------
+        str
+            検閲済み文字列
+
+        Example
+        -------
+        >>> filter = WordFilter("ng_word")
+        >>> filter.censor("hoge ng_word")
+        "hoge <censored>"
+        """
         if not self.detect(text):
             return text
         result = text
@@ -106,7 +128,7 @@ class WordFilter:
         """
         m = self._match_sns_message(sns_message)
         sns_message = m.group(2)
-        censored_text = self.censor(sns_message)
+        censored_text = self._censor(sns_message)
         return f"{m.group(1)}: {censored_text}"
 
     def _match_sns_message(self, sns_message: str) -> re.Match:
