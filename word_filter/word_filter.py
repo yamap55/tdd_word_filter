@@ -22,6 +22,7 @@ class WordFilter:
         """
         self.ng_words = ng_words
         self.censored_text = censored_text
+        self.censor_log = []
 
     def detect(self, text: str) -> bool:
         """
