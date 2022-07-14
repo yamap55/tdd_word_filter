@@ -1,6 +1,7 @@
 """ワードフィルタ"""
 import re
 from pathlib import Path
+from typing import Any
 
 
 class WordFilter:
@@ -22,7 +23,18 @@ class WordFilter:
         """
         self.ng_words = ng_words
         self.censored_text = censored_text
-        self.censor_log = []
+        self._censor_history = []
+
+    def describe(self) -> list[dict[str, Any]]:
+        """
+        censorの呼び出し履歴から統計を算出
+
+        Returns
+        -------
+        list[dict[str, Any]]
+            censorの呼び出し履歴からの統計
+        """
+        return self._censor_history
 
     def detect(self, text: str) -> bool:
         """
