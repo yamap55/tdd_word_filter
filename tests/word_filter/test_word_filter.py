@@ -186,19 +186,19 @@ class TestCensorFromTextFile:
             word_filter.censor_from_text_file(Path("a.txt"))
 
 
-class TestCensorLog:
+class TestDescribe:
     @pytest.fixture
     def word_filter(self):
         return WordFilter("ng_word")
 
     def test_no_censor(self, word_filter):
-        actual = word_filter.censor_log
+        actual = word_filter.describe()
         expected = []
         assert actual == expected
 
     def test_censor(self, word_filter):
         word_filter.censor("ng_word")
-        actual = word_filter.censor_log
+        actual = word_filter.describe()
         expected = [
             {
                 "user_name": "",
