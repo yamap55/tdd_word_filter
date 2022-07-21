@@ -115,6 +115,10 @@ class WordFilter:
             return text
         result = text
         for ng_word in self.ng_words:
+            count = text.count(ng_word)
+            self._censor_history.append(
+                {"user_name": "", "text": text, "frequency": {ng_word: count}}
+            )
             result = result.replace(ng_word, self.censored_text)
         return result
 
