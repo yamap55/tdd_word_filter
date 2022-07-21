@@ -247,3 +247,5 @@ class TestDescribe:
         word_filter.censor(text)
         actual = word_filter.describe()
         assert actual == expected
+
+    # TODO: ng_word1, ng_word2, ng_word1パターンの追加
