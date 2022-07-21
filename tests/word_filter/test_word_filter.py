@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from regex import W
 
 from word_filter.word_filter import WordFilter
 
@@ -196,16 +197,34 @@ class TestDescribe:
         expected = []
         assert actual == expected
 
-    def test_censor(self, word_filter):
-        word_filter.censor("ng_word")
+    @pytest.mark.parametrize(
+        "ng_words, text, expected",
+        [
+            (
+                ["ng_word"],
+                "ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word",
+                        "frequency": {
+                            "ng_word": 1,
+                        },
+                    }
+                ],
+            ),
+            # (["ng_word"], "hoge: ng_word ng_word", "hoge: <censored> <censored>"),
+            # (["ng_word1", "ng_word2"], "hoge: ng_word1", "hoge: <censored>"),
+            # (["ng_word1", "ng_word2"], "hoge: ng_word2", "hoge: <censored>"),
+            # (
+            #     ["ng_word1", "ng_word2"],
+            #     "hoge: ng_word1, ng_word2",
+            #     "hoge: <censored>, <censored>",
+            # ),
+        ],
+    )
+    def test_censor(self, ng_words, text, expected):
+        word_filter = WordFilter(*ng_words)
+        word_filter.censor(text)
         actual = word_filter.describe()
-        expected = [
-            {
-                "user_name": "",
-                "text": "ng_word",
-                "frequency": {
-                    "ng_word": 1,
-                },
-            }
-        ]
         assert actual == expected
