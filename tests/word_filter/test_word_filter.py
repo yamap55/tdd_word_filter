@@ -213,14 +213,33 @@ class TestDescribe:
                     }
                 ],
             ),
-            # (["ng_word"], "hoge: ng_word ng_word", "hoge: <censored> <censored>"),
-            # (["ng_word1", "ng_word2"], "hoge: ng_word1", "hoge: <censored>"),
-            # (["ng_word1", "ng_word2"], "hoge: ng_word2", "hoge: <censored>"),
-            # (
-            #     ["ng_word1", "ng_word2"],
-            #     "hoge: ng_word1, ng_word2",
-            #     "hoge: <censored>, <censored>",
-            # ),
+            (
+                ["ng_word"],
+                "ng_word ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word ng_word",
+                        "frequency": {
+                            "ng_word": 2,
+                        },
+                    }
+                ],
+            ),
+            (
+                ["ng_word1", "ng_word2"],
+                "ng_word1 ng_word2",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1 ng_word2",
+                        "frequency": {
+                            "ng_word1": 1,
+                            "ng_word2": 1,
+                        },
+                    }
+                ],
+            ),
         ],
     )
     def test_censor(self, ng_words, text, expected):
