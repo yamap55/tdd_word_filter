@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from regex import W
 
 from word_filter.word_filter import WordFilter
 
@@ -184,3 +185,67 @@ class TestCensorFromTextFile:
     def test_not_exists_input_file(self, word_filter):
         with pytest.raises(FileNotFoundError):
             word_filter.censor_from_text_file(Path("a.txt"))
+
+
+class TestDescribe:
+    @pytest.fixture
+    def word_filter(self):
+        return WordFilter("ng_word")
+
+    def test_no_censor(self, word_filter):
+        actual = word_filter.describe()
+        expected = []
+        assert actual == expected
+
+    @pytest.mark.parametrize(
+        "ng_words, text, expected",
+        [
+            (
+                ["ng_word"],
+                "ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word",
+                        "frequency": {
+                            "ng_word": 1,
+                        },
+                    }
+                ],
+            ),
+            (
+                ["ng_word"],
+                "ng_word ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word ng_word",
+                        "frequency": {
+                            "ng_word": 2,
+                        },
+                    }
+                ],
+            ),
+            (
+                ["ng_word1", "ng_word2"],
+                "ng_word1 ng_word2",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1 ng_word2",
+                        "frequency": {
+                            "ng_word1": 1,
+                            "ng_word2": 1,
+                        },
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_censor(self, ng_words, text, expected):
+        word_filter = WordFilter(*ng_words)
+        word_filter.censor(text)
+        actual = word_filter.describe()
+        assert actual == expected
+
+    # TODO: ng_word1, ng_word2, ng_word1パターンの追加

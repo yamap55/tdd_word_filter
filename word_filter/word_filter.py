@@ -1,6 +1,7 @@
 """ワードフィルタ"""
 import re
 from pathlib import Path
+from typing import Any
 
 
 class WordFilter:
@@ -22,6 +23,18 @@ class WordFilter:
         """
         self.ng_words = ng_words
         self.censored_text = censored_text
+        self._censor_history = []
+
+    def describe(self) -> list[dict[str, Any]]:
+        """
+        censorの呼び出し履歴から統計を算出
+
+        Returns
+        -------
+        list[dict[str, Any]]
+            censorの呼び出し履歴からの統計
+        """
+        return self._censor_history
 
     def detect(self, text: str) -> bool:
         """
@@ -76,10 +89,36 @@ class WordFilter:
         >>> filter.censor("hoge ng_word")
         "hoge <censored>"
         """
+        return self._censor(text)
+
+    def _censor(self, text: str) -> str:
+        """
+        文字列にng_wordが含まれていたら検閲する
+
+        Parameters
+        ----------
+        text : str
+            検閲対象の文字列
+
+        Returns
+        -------
+        str
+            検閲済み文字列
+
+        Example
+        -------
+        >>> filter = WordFilter("ng_word")
+        >>> filter.censor("hoge ng_word")
+        "hoge <censored>"
+        """
         if not self.detect(text):
             return text
         result = text
         for ng_word in self.ng_words:
+            count = text.count(ng_word)
+            self._censor_history.append(
+                {"user_name": "", "text": text, "frequency": {ng_word: count}}
+            )
             result = result.replace(ng_word, self.censored_text)
         return result
 
@@ -105,7 +144,7 @@ class WordFilter:
         """
         m = self._match_sns_message(sns_message)
         sns_message = m.group(2)
-        censored_text = self.censor(sns_message)
+        censored_text = self._censor(sns_message)
         return f"{m.group(1)}: {censored_text}"
 
     def _match_sns_message(self, sns_message: str) -> re.Match:
