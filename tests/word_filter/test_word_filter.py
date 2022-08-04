@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-from regex import W
 
 from word_filter.word_filter import WordFilter
 
