@@ -1,5 +1,6 @@
 """ワードフィルタ"""
 import re
+from functools import reduce
 from pathlib import Path
 from typing import Any
 
@@ -114,12 +115,16 @@ class WordFilter:
         if not self.detect(text):
             return text
         result = text
-        d = {}
-        for ng_word in self.ng_words:
+
+        def f(frequency: dict[str, int], ng_word: str) -> dict[str, int]:
             count = text.count(ng_word)
-            d[ng_word] = count
+            frequency[ng_word] = count
+            return frequency
+
+        frequency = reduce(f, self.ng_words, {})
+        for ng_word in self.ng_words:
             result = result.replace(ng_word, self.censored_text)
-        self._censor_history.append({"user_name": "", "text": text, "frequency": d})
+        self._censor_history.append({"user_name": "", "text": text, "frequency": frequency})
         return result
 
     def censor_from_sns_message(self, sns_message: str) -> str:
