@@ -256,6 +256,21 @@ class TestDescribe:
                     }
                 ],
             ),
+            (
+                # 内包しているNGワードがある場合
+                ["ng_word", "ng_word1"],
+                "ng_word1",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1",
+                        "frequency": {
+                            "ng_word": 1,
+                            "ng_word1": 1,
+                        },
+                    }
+                ],
+            ),
         ],
     )
     def test_censor(self, ng_words, text, expected):
@@ -263,5 +278,3 @@ class TestDescribe:
         word_filter.censor(text)
         actual = word_filter.describe()
         assert actual == expected
-
-    # TODO: ng_word, ng_word1, ng_word11パターンの追加
