@@ -200,6 +200,7 @@ class TestDescribe:
         "ng_words, text, expected",
         [
             (
+                # normal パターン
                 ["ng_word"],
                 "ng_word",
                 [
@@ -213,6 +214,7 @@ class TestDescribe:
                 ],
             ),
             (
+                # テキストに複数のNGワードが含まれている場合
                 ["ng_word"],
                 "ng_word ng_word",
                 [
@@ -226,6 +228,7 @@ class TestDescribe:
                 ],
             ),
             (
+                # NGワードが複数の場合
                 ["ng_word1", "ng_word2"],
                 "ng_word1 ng_word2",
                 [
@@ -240,6 +243,7 @@ class TestDescribe:
                 ],
             ),
             (
+                # NGワードが重複している場合
                 ["ng_word1", "ng_word1"],
                 "ng_word1",
                 [
