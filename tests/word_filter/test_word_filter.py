@@ -260,5 +260,4 @@ class TestDescribe:
         actual = word_filter.describe()
         assert actual == expected
 
-    # TODO: ng_word1, ng_word2, ng_word1パターンの追加
     # TODO: ng_word, ng_word1, ng_word11パターンの追加
