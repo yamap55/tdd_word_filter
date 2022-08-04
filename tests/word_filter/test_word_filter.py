@@ -239,6 +239,19 @@ class TestDescribe:
                     }
                 ],
             ),
+            (
+                ["ng_word1", "ng_word1"],
+                "ng_word1",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1",
+                        "frequency": {
+                            "ng_word1": 1,
+                        },
+                    }
+                ],
+            ),
         ],
     )
     def test_censor(self, ng_words, text, expected):
