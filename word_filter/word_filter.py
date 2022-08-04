@@ -114,12 +114,12 @@ class WordFilter:
         if not self.detect(text):
             return text
         result = text
+        d = {}
         for ng_word in self.ng_words:
             count = text.count(ng_word)
-            self._censor_history.append(
-                {"user_name": "", "text": text, "frequency": {ng_word: count}}
-            )
+            d[ng_word] = count
             result = result.replace(ng_word, self.censored_text)
+        self._censor_history.append({"user_name": "", "text": text, "frequency": d})
         return result
 
     def censor_from_sns_message(self, sns_message: str) -> str:
