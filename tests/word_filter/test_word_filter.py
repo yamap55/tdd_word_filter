@@ -94,6 +94,8 @@ class TestCensor:
                     "hoge: ng_word1, ng_word2",
                     "hoge: <censored>, <censored>",
                 ),
+                # 内包しているNGワードがある場合
+                (["ng_word", "ng_word1"], "hoge: ng_word1", "hoge: <censored>"),
             ],
         )
         def test_in_text(self, ng_words, message, expected):
