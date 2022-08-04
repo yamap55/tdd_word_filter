@@ -22,7 +22,12 @@ class WordFilter:
         censored_text : str, optional
             検閲された文字列, by default "<censored>"
         """
-        self.ng_words = ng_words
+
+        ng_words = set(ng_words)  # type: ignore
+        # 内包されているNGワード対応
+        # 内包しているワードで処理をする
+        # 例: 「ng_word,ng_word99」が設定されている場合にng_word99を先に処理する事で、「<censored>99」とならない
+        self.ng_words = reversed(sorted(list(ng_words), key=len))
         self.censored_text = censored_text
         self._censor_history = []
 
