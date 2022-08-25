@@ -26,7 +26,7 @@ class WordFilter:
         # 内包されているNGワード対応
         # 内包しているワードで処理をする
         # 例: 「ng_word,ng_word99」が設定されている場合にng_word99を先に処理する事で、「<censored>99」とならない
-        self.ng_words = reversed(sorted(list(ng_words), key=len))
+        self.ng_words = list(reversed(sorted(list(ng_words), key=len)))
         self.censored_text = censored_text
         self._censor_history = []
 
