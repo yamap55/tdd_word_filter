@@ -22,7 +22,6 @@ class WordFilter:
         censored_text : str, optional
             検閲された文字列, by default "<censored>"
         """
-
         ng_words = set(ng_words)  # type: ignore
         # 内包されているNGワード対応
         # 内包しているワードで処理をする
