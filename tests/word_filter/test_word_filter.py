@@ -190,10 +190,10 @@ class TestCensorFromTextFile:
 
 class TestDescribe:
     @pytest.fixture
-    def word_filter(self):
+    def word_filter(self) -> WordFilter:
         return WordFilter("ng_word")
 
-    def test_no_censor(self, word_filter):
+    def test_no_censor(self, word_filter: WordFilter):
         actual = word_filter.describe()
         expected = []
         assert actual == expected
