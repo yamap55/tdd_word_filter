@@ -317,3 +317,17 @@ class TestDescribe:
             },
         ]
         assert actual == expected
+
+    def test_censor_from_sns_message(self, word_filter: WordFilter):
+        word_filter.censor_from_sns_message("user_name: aaa ng_word bbb")
+        actual = word_filter.describe()
+        expected = [
+            {
+                "user_name": "user_name",
+                "text": "aaa ng_word bbb",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+        ]
+        assert actual == expected
