@@ -280,3 +280,25 @@ class TestDescribe:
         word_filter.censor(text)
         actual = word_filter.describe()
         assert actual == expected
+
+    def test_multi_censor(self, word_filter: WordFilter):
+        word_filter.censor("aaa ng_word bbb")
+        word_filter.censor("ccc ng_word ddd")
+        actual = word_filter.describe()
+        expected = [
+            {
+                "user_name": "",
+                "text": "aaa ng_word bbb",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+            {
+                "user_name": "",
+                "text": "ccc ng_word ddd",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+        ]
+        assert actual == expected
