@@ -273,6 +273,21 @@ class TestDescribe:
                     }
                 ],
             ),
+            # TODO: 実装を追加
+            # (
+            #     # NGワードが含まれていない場合
+            #     ["ng_word"],
+            #     "test_text",
+            #     [
+            #         {
+            #             "user_name": "",
+            #             "text": "test_text",
+            #             "frequency": {
+            #                 "ng_word": 0,
+            #             },
+            #         }
+            #     ],
+            # ),
         ],
     )
     def test_censor(self, ng_words, text, expected):
