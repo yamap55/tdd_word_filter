@@ -119,13 +119,7 @@ class WordFilter:
         "hoge <censored>"
         """
         if not self.detect(text):
-            self._censor_history.append(
-                {
-                    "user_name": user_name,
-                    "text": text,
-                    "frequency": {ng_word: 0 for ng_word in self.ng_words},
-                }
-            )
+            self._append_censor_history(user_name, text, {ng_word: 0 for ng_word in self.ng_words})
             return text
         result = text
 
@@ -137,8 +131,23 @@ class WordFilter:
         frequency = reduce(f, self.ng_words, {})
         for ng_word in self.ng_words:
             result = result.replace(ng_word, self.censored_text)
-        self._censor_history.append({"user_name": user_name, "text": text, "frequency": frequency})
+        self._append_censor_history(user_name, text, frequency)
         return result
+
+    def _append_censor_history(self, user_name: str, text: str, frequency: dict[str, Any]) -> None:
+        """
+        検閲のログを追加
+
+        Parameters
+        ----------
+        user_name : str
+            ユーザ名
+        text : str
+            検閲対象テキスト
+        frequency : dict[str, Any]
+            頻度
+        """
+        self._censor_history.append({"user_name": user_name, "text": text, "frequency": frequency})
 
     def censor_from_sns_message(self, sns_message: str) -> str:
         """
