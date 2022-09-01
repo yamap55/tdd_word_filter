@@ -119,6 +119,13 @@ class WordFilter:
         "hoge <censored>"
         """
         if not self.detect(text):
+            self._censor_history.append(
+                {
+                    "user_name": user_name,
+                    "text": text,
+                    "frequency": {ng_word: 0 for ng_word in self.ng_words},
+                }
+            )
             return text
         result = text
 
