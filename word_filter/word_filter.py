@@ -96,7 +96,7 @@ class WordFilter:
         """
         return self._censor(text)
 
-    def _censor(self, text: str) -> str:
+    def _censor(self, text: str, user_name="") -> str:
         """
         文字列にng_wordが含まれていたら検閲する
 
@@ -104,6 +104,8 @@ class WordFilter:
         ----------
         text : str
             検閲対象の文字列
+        user_name : str, optional
+            ユーザ名, by default ""
 
         Returns
         -------
@@ -128,7 +130,7 @@ class WordFilter:
         frequency = reduce(f, self.ng_words, {})
         for ng_word in self.ng_words:
             result = result.replace(ng_word, self.censored_text)
-        self._censor_history.append({"user_name": "", "text": text, "frequency": frequency})
+        self._censor_history.append({"user_name": user_name, "text": text, "frequency": frequency})
         return result
 
     def censor_from_sns_message(self, sns_message: str) -> str:
@@ -152,8 +154,9 @@ class WordFilter:
         "ng_word: <censored>"
         """
         m = self._match_sns_message(sns_message)
+        user_name = m.group(1)
         sns_message = m.group(2)
-        censored_text = self._censor(sns_message)
+        censored_text = self._censor(sns_message, user_name)
         return f"{m.group(1)}: {censored_text}"
 
     def _match_sns_message(self, sns_message: str) -> re.Match:
