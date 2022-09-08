@@ -94,6 +94,8 @@ class TestCensor:
                     "hoge: ng_word1, ng_word2",
                     "hoge: <censored>, <censored>",
                 ),
+                # 内包しているNGワードがある場合
+                (["ng_word", "ng_word1"], "hoge: ng_word1", "hoge: <censored>"),
             ],
         )
         def test_in_text(self, ng_words, message, expected):
@@ -184,3 +186,147 @@ class TestCensorFromTextFile:
     def test_not_exists_input_file(self, word_filter):
         with pytest.raises(FileNotFoundError):
             word_filter.censor_from_text_file(Path("a.txt"))
+
+
+class TestDescribe:
+    @pytest.fixture
+    def word_filter(self) -> WordFilter:
+        return WordFilter("ng_word")
+
+    def test_no_censor(self, word_filter: WordFilter):
+        actual = word_filter.describe()
+        expected = []
+        assert actual == expected
+
+    @pytest.mark.parametrize(
+        "ng_words, text, expected",
+        [
+            (
+                # normal パターン
+                ["ng_word"],
+                "ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word",
+                        "frequency": {
+                            "ng_word": 1,
+                        },
+                    }
+                ],
+            ),
+            (
+                # テキストに複数のNGワードが含まれている場合
+                ["ng_word"],
+                "ng_word ng_word",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word ng_word",
+                        "frequency": {
+                            "ng_word": 2,
+                        },
+                    }
+                ],
+            ),
+            (
+                # NGワードが複数の場合
+                ["ng_word1", "ng_word2"],
+                "ng_word1 ng_word2",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1 ng_word2",
+                        "frequency": {
+                            "ng_word1": 1,
+                            "ng_word2": 1,
+                        },
+                    }
+                ],
+            ),
+            (
+                # NGワードが重複している場合
+                ["ng_word1", "ng_word1"],
+                "ng_word1",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1",
+                        "frequency": {
+                            "ng_word1": 1,
+                        },
+                    }
+                ],
+            ),
+            (
+                # 内包しているNGワードがある場合
+                ["ng_word", "ng_word1"],
+                "ng_word1",
+                [
+                    {
+                        "user_name": "",
+                        "text": "ng_word1",
+                        "frequency": {
+                            "ng_word": 1,
+                            "ng_word1": 1,
+                        },
+                    }
+                ],
+            ),
+            (
+                # NGワードが含まれていない場合
+                ["ng_word"],
+                "test_text",
+                [
+                    {
+                        "user_name": "",
+                        "text": "test_text",
+                        "frequency": {
+                            "ng_word": 0,
+                        },
+                    }
+                ],
+            ),
+        ],
+    )
+    def test_censor(self, ng_words, text, expected):
+        word_filter = WordFilter(*ng_words)
+        word_filter.censor(text)
+        actual = word_filter.describe()
+        assert actual == expected
+
+    def test_multi_censor(self, word_filter: WordFilter):
+        word_filter.censor("aaa ng_word bbb")
+        word_filter.censor("ccc ng_word ddd")
+        actual = word_filter.describe()
+        expected = [
+            {
+                "user_name": "",
+                "text": "aaa ng_word bbb",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+            {
+                "user_name": "",
+                "text": "ccc ng_word ddd",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+        ]
+        assert actual == expected
+
+    def test_censor_from_sns_message(self, word_filter: WordFilter):
+        word_filter.censor_from_sns_message("user_name: aaa ng_word bbb")
+        actual = word_filter.describe()
+        expected = [
+            {
+                "user_name": "user_name",
+                "text": "aaa ng_word bbb",
+                "frequency": {
+                    "ng_word": 1,
+                },
+            },
+        ]
+        assert actual == expected
