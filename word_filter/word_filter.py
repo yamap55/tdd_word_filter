@@ -173,7 +173,7 @@ class WordFilter:
         user_name = m.group(1)
         sns_message = m.group(2)
         censored_text = self._censor(sns_message, user_name)
-        return f"{m.group(1)}: {censored_text}"
+        return f"{user_name}: {censored_text}"
 
     def _match_sns_message(self, sns_message: str) -> re.Match:
         """
