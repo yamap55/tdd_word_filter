@@ -9,7 +9,7 @@ class WordFilter:
     """ワードフィルタ"""
 
     """SNS形式のメッセージパターン"""
-    _SNS_MESSAGE_PATTERN = re.compile(r"^(.+): (.+)")
+    _SNS_MESSAGE_PATTERN = re.compile(r"^(?P<user_name>.+): (?P<sns_message>.+)")
 
     def __init__(self, *ng_words: str, censored_text="<censored>"):
         """
@@ -72,7 +72,7 @@ class WordFilter:
             含まれているか否か
         """
         m = self._match_sns_message(sns_message)
-        return self.detect(m.group(2))
+        return self.detect(m.group("sns_message"))
 
     def censor(self, text: str) -> str:
         """
@@ -170,7 +170,7 @@ class WordFilter:
         "ng_word: <censored>"
         """
         m = self._match_sns_message(sns_message)
-        user_name, sns_message = m.group(1, 2)
+        user_name, sns_message = m.group("user_name", "sns_message")
         censored_text = self._censor(sns_message, user_name)
         return f"{user_name}: {censored_text}"
 
