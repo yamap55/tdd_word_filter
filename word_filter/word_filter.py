@@ -170,8 +170,9 @@ class WordFilter:
         "ng_word: <censored>"
         """
         m = self._match_sns_message(sns_message)
-        user_name = m.group(1)
-        sns_message = m.group(2)
+        user_name, sns_message = m.group(1, 2)
+        # user_name = m.group(1)
+        # sns_message = m.group(2)
         censored_text = self._censor(sns_message, user_name)
         return f"{user_name}: {censored_text}"
 
